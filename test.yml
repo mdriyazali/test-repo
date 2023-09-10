@@ -1,0 +1,27 @@
+---
+- name: Run Docker Compose
+  hosts: localhost # Use the group name from your inventory file
+  #become: yes  # Enable privilege escalation (sudo)
+
+  tasks:
+    - name: Check if docker-compose is installed
+      command: docker-compose --version
+      register: docker_compose_version
+      ignore_errors: yes
+
+    - name: Install Docker Compose if not installed
+      command: curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      args:
+        creates: /usr/local/bin/docker-compose
+      when: docker_compose_version.rc != 0
+      register: install_result
+
+    - name: Set execute permissions for docker-compose
+      command: chmod +x /usr/local/bin/docker-compose
+      when: install_result.changed
+
+    - name: Run docker-compose
+      command: docker-compose -f docker-compose.yml up -d
+      args:
+        chdir: /home/root/git_project/
+
