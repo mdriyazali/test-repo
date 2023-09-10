@@ -5,7 +5,7 @@ services:
     image: "${DHIS2_IMAGE:-dhis2/core-dev}"
     ports:
       - 8081:8080 # DHIS2
-      - 8081:8081 # Debugger: connect using commandline flag -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8081
+      - 8082:8081 # Debugger: connect using commandline flag -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8081
       - 9010:9010 # JMX port (for example for VisualVM)
     volumes:
       - ./docker/dhis.conf:/opt/dhis2/dhis.conf:ro
